@@ -2,16 +2,28 @@ const path = require("path");
 const dotenv = require('dotenv').config();
 var cors = require('cors');
 const fileUpload = require("express-fileupload");
-const express = require("express");
+
+
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+
+const { Server } = require("socket.io");
+
+const io = new Server(server, {
+  cors: {
+    origin: `http://localhost:${process.env.PORT_UI}`
+  }
+});
+
 const { connect } = require('./app/database');
 const { blizzardLogIn } = require('./app/controllers/BlizzardAuth');
-const { tokenPriceList } = require('./app/controllers/Token');
+const { getTokenPriceFromBlizzard, tokenPriceList } = require('./app/controllers/Token');
 const { wowTokenService } = require('./app/services/wowToken');
 const { bgGreen } = require('colors');
 
 (async () => {
-  const app = await express();
-
 
 
   //* BodyPaser
@@ -37,9 +49,17 @@ const { bgGreen } = require('colors');
 
   wowTokenService();
 
+  io.on('connection', async (socket) => {
+    global.io = io;
+    console.log('User connected with id: ' + socket.id);
+    await getTokenPriceFromBlizzard();
+    const tokenList = await tokenPriceList();
+    io.to(socket.id).emit("wowToken", tokenList);
+  })
+
   const PORT = process.env.PORT || 3000;
 
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(
       `Server running in ${process.env.NODE_ENV} mode on port ${bgGreen(PORT)}`
     )

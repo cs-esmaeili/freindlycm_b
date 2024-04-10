@@ -17,10 +17,11 @@ exports.getTokenPriceFromBlizzard = async () => {
 
         const lastPrice = await Token.findOne().sort({ createdAt: -1 }).exec();
 
+        await deleteExpiredTokenPrice();
         if (lastPrice == null || price != lastPrice.token) {
-            await Token.create({ token: price, change: (!lastPrice ? true : price < lastPrice.token) })
+            await Token.create({ token: price, change: (!lastPrice ? true : price < lastPrice.token) });
+            return true;
         }
-        deleteExpiredTokenPrice();
     } catch (error) {
         console.log(error);
         console.log(red("Failed to get TokenPrice"));
@@ -30,5 +31,5 @@ exports.getTokenPriceFromBlizzard = async () => {
 
 exports.tokenPriceList = async (req, res) => {
     const list = await Token.find({});
-    res.send(list);
+    return list;
 }
