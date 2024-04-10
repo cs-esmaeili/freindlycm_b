@@ -1,6 +1,7 @@
 const { wowTokenPrice } = require('../requests/wowToken');
 const Token = require('../database/models/Token');
 const { utcToJalali } = require('../utils/TimeConverter');
+const { red } = require('colors');
 
 const deleteExpiredTokenPrice = async () => {
     const sevenDaysAgo = new Date();
@@ -11,8 +12,6 @@ const deleteExpiredTokenPrice = async () => {
 
 exports.getTokenPriceFromBlizzard = async () => {
     try {
-        console.log("Atemp to get TokenPrice");
-
         const { data } = await wowTokenPrice(global.accessToken);
         let price = (data.price + "").substring(0, 3);
 
@@ -23,7 +22,8 @@ exports.getTokenPriceFromBlizzard = async () => {
         }
         deleteExpiredTokenPrice();
     } catch (error) {
-        console.log("failed to get TokenPrice");
+        console.log(error);
+        console.log(red("Failed to get TokenPrice"));
         return false;
     }
 }
