@@ -30,6 +30,6 @@ exports.getTokenPriceFromBlizzard = async () => {
 }
 
 exports.tokenPriceList = async (req, res) => {
-    const list = await Token.find({});
+    const list = (await Token.find({})).reverse();
     return list;
 }

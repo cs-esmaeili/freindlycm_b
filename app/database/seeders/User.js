@@ -2,7 +2,7 @@ const Hero = require('../models/Hero');
 const User = require('../models/User');
 const { green, red } = require('colors');
 
-const seqNumber = 3;
+const seqNumber = 4;
 const seed = async (app) => {
 
     const userNames = ['javad', 'amin', 'abolfazl'];
