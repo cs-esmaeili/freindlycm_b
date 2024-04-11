@@ -20,7 +20,7 @@ const io = new Server(server, {
 const { connect } = require('./app/database');
 const { blizzardLogIn } = require('./app/controllers/BlizzardAuth');
 const { getTokenPriceFromBlizzard, tokenPriceList } = require('./app/controllers/Token');
-const { userList} = require('./app/controllers/User');
+const { userList, addUser } = require('./app/controllers/User');
 const { getGeneralData } = require('./app/controllers/General');
 const { gpList } = require('./app/controllers/Gp');
 const { wowTokenService } = require('./app/services/wowToken');
@@ -47,6 +47,7 @@ const { bgGreen } = require('colors');
   app.get('/getGeneralData', getGeneralData);
   app.get('/userList', userList);
   app.get('/gpList', gpList);
+  app.post('/addUser', addUser);
 
   //* Database connection
   await connect(app);
