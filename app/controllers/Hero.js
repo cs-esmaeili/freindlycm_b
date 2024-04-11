@@ -1,18 +1,26 @@
 const Hero = require('../database/models/Hero');
-const { mHeroDelete } = require('../messages/response.json');
+const User = require('../database/models/User');
+const { mHeroDelete, mAddHero } = require('../messages/response.json');
 
 
 
 exports.addHero = async (req, res) => {
     try {
-        const { name, leader } = req.body;
-        const result = await User.create({ name, leader, heroList: [] });
-        if (result) {
-            res.send({ message: mAddUser.ok });
+        const { name, user_id, class_id } = req.body;
+        const resultHero = await Hero.create({ name, class: class_id, user: user_id, });
+
+
+        let userHeroList = (await User.findOne({ _id: user_id }).lean()).heroList;
+        userHeroList.push(resultHero._id);
+        const resultUser = await User.updateOne({ _id: user_id }, { heroList: userHeroList });
+
+        if (resultHero && resultUser) {
+            res.send({ message: mAddHero.ok });
             return;
         }
-        throw { message: mAddUser.fail, statusCode: 401 };
+        throw { message: mAddHero.fail, statusCode: 401 };
     } catch (err) {
+        console.log(err);
         res.status(err.statusCode || 422).json(err);
     }
 }
