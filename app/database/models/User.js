@@ -8,6 +8,11 @@ module.exports = mongoose.model("User", buildSchema({
         type: String,
         required: true,
     },
+    leader: {
+        type: Number,
+        required: true,
+        default: 3,
+    },
     heroList: {
         type: [mongoose.ObjectId],
         ref: 'Hero',

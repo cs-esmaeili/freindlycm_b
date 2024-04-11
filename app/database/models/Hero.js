@@ -6,6 +6,11 @@ const schema = buildSchema({
         type: String,
         required: true,
     },
+    user: {
+        type: mongoose.ObjectId,
+        ref: 'User',
+        required: true,
+    },
     class: {
         type: mongoose.ObjectId,
         ref: 'Class',
@@ -21,6 +26,11 @@ const schema = buildSchema({
         required: true,
         default: -1,
     },
+    inFarm: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
 });
 
 exports.schema = schema;
