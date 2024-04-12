@@ -24,6 +24,37 @@ exports.addGp = async (req, res) => {
     }
 }
 
+exports.deleteGp = async (req, res) => {
+    try {
+        const { gp_id, colNumber } = req.body;
+        let gp = await Gp.findOne({ _id: gp_id });
+
+        let updateGp;
+        if (colNumber == 1) {
+            await Hero.updateMany({ _id: { $in: gp.col1 } }, { $set: { inFarm: false } });
+            updateGp = await Gp.updateOne({ _id: gp_id }, { col1: null });
+        } else {
+            await Hero.updateMany({ _id: { $in: gp.col2 } }, { $set: { inFarm: false } });
+            updateGp = await Gp.updateOne({ _id: gp_id }, { col2: null });
+        }
+        gp = await Gp.findOne({ _id: gp_id });
+
+        if (!gp.col1 && !gp.col2) {
+            await Gp.deleteOne({ _id: gp_id });
+        }
+
+
+        if (updateGp.modifiedCount == 1) {
+            res.send({ message: mAddGp.ok });
+            return;
+        }
+        throw { message: mAddGp.fail, statusCode: 401 };
+    } catch (err) {
+        console.log(err);
+        res.status(err.statusCode || 422).json(err);
+    }
+}
+
 exports.addHeroToGp = async (req, res) => {
     try {
         const { hero_id, gp_id, colNumber } = req.body;
