@@ -24,7 +24,7 @@ const { userList, addUser, deleteUser, updateUser } = require('./app/controllers
 const { classList } = require('./app/controllers/Class');
 const { deleteHero, addHero } = require('./app/controllers/Hero');
 const { getGeneralData } = require('./app/controllers/General');
-const { gpList } = require('./app/controllers/Gp');
+const { gpList, addGp, addHeroToGp, deleteHeroFromGp } = require('./app/controllers/Gp');
 const { wowTokenService } = require('./app/services/wowToken');
 const { bgGreen } = require('colors');
 
@@ -55,6 +55,9 @@ const { bgGreen } = require('colors');
   app.post('/deleteHero', deleteHero);
   app.post('/addHero', addHero);
   app.get('/classList', classList);
+  app.post('/addGp', addGp);
+  app.post('/addHeroToGp', addHeroToGp);
+  app.post('/deleteHeroFromGp', deleteHeroFromGp);
 
   //* Database connection
   await connect(app);

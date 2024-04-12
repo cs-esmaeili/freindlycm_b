@@ -2,8 +2,6 @@ const Hero = require('../database/models/Hero');
 const User = require('../database/models/User');
 const { mHeroDelete, mAddHero } = require('../messages/response.json');
 
-
-
 exports.addHero = async (req, res) => {
     try {
         const { name, user_id, class_id } = req.body;
