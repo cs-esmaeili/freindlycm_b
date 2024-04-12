@@ -23,7 +23,7 @@ const { getTokenPriceFromBlizzard, tokenPriceList } = require('./app/controllers
 const { userList, addUser, deleteUser, updateUser } = require('./app/controllers/User');
 const { classList } = require('./app/controllers/Class');
 const { deleteHero, addHero } = require('./app/controllers/Hero');
-const { getGeneralData } = require('./app/controllers/General');
+const { getGeneralData, setGeneralData } = require('./app/controllers/General');
 const { gpList, addGp, addHeroToGp, deleteHeroFromGp, deleteGp } = require('./app/controllers/Gp');
 const { wowTokenService } = require('./app/services/wowToken');
 const { bgGreen } = require('colors');
@@ -47,6 +47,7 @@ const { bgGreen } = require('colors');
 
   //* Routes
   app.get('/getGeneralData', getGeneralData);
+  app.post('/setGeneralData', setGeneralData);
   app.get('/userList', userList);
   app.get('/gpList', gpList);
   app.post('/addUser', addUser);
@@ -69,7 +70,7 @@ const { bgGreen } = require('colors');
 
   io.on('connection', async (socket) => {
     global.io = io;
-    console.log('User connected with id: ' + socket.id);
+    // console.log('User connected with id: ' + socket.id);
     await getTokenPriceFromBlizzard();
     const tokenList = await tokenPriceList();
     io.to(socket.id).emit("wowToken", tokenList);
